@@ -166,5 +166,5 @@ class League(commands.Cog):
             emb.add_field(name=golds, value=horo, inline=False)
             emb.add_field(name=kda, value=stats, inline=True)
             emblist.append(emb)
-            emb = discord.Embed()
+            emb = discord.Embed(title="History", color=ctx.bot.color)
         await menu(ctx, emblist, DEFAULT_CONTROLS)
