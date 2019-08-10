@@ -167,4 +167,4 @@ class League(commands.Cog):
             emb.add_field(name=kda, value=stats, inline=True)
             emblist.append(emb)
             await msg.edit(content="")
-            await menu(ctx, emblist, DEFAULT_CONTROLS)
+        await menu(ctx, emblist, DEFAULT_CONTROLS)
