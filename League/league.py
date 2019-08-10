@@ -46,62 +46,62 @@ class League(commands.Cog):
     @apikeyset()
     async def elo(self, ctx, region, *, summoner):
         """Show summoner ranking"""
-        ##try:
-        res = await self.stats.get_elo(region, summoner)
-        summonericon = summoner.replace(" ", "_")
-        link = "http://avatar.leagueoflegends.com/" + region + "/" + summonericon + ".png"
-        if type(res) == list:
-            embed = discord.Embed(title="League elo", color=ctx.bot.color)
-            embed.add_field(name="Summoner", value=summoner, inline=True)
-            embed.add_field(name="Stats", value="\n".join(res), inline=False)
-            embed.set_thumbnail(url=link)
-            await ctx.send(embed=embed)
-        else:
-            embed = discord.Embed(title="League elo", color=ctx.bot.color)
-            embed.add_field(name="Summoner", value=summoner, inline=True)
-            embed.add_field(name="Stats", value=res, inline=False)
-            await ctx.send(embed=embed)
-        ##except:
-        ##    await ctx.send(_("This summoner doesn't exist in that region."))
+        try:
+            res = await self.stats.get_elo(region, summoner)
+            summonericon = summoner.replace(" ", "_")
+            link = "http://avatar.leagueoflegends.com/" + region + "/" + summonericon + ".png"
+            if type(res) == list:
+                embed = discord.Embed(title="League elo", color=ctx.bot.color)
+                embed.add_field(name="Summoner", value=summoner, inline=True)
+                embed.add_field(name="Stats", value="\n".join(res), inline=False)
+                embed.set_thumbnail(url=link)
+                await ctx.send(embed=embed)
+            else:
+                embed = discord.Embed(title="League elo", color=ctx.bot.color)
+                embed.add_field(name="Summoner", value=summoner, inline=True)
+                embed.add_field(name="Stats", value=res, inline=False)
+                await ctx.send(embed=embed)
+        except:
+            await ctx.send(_("This summoner doesn't exist in that region."))
 
     @commands.command()
     @apikeyset()
     async def masteries(self, ctx, region, *, summoner):
         """Show top masteries champions of the summoner."""
-        ##try:
-        elo = await self.stats.get_elo(region, summoner)
-        emb = discord.Embed(title=summoner, description="\n".join(elo), color=ctx.bot.color)
-        emb = discord.Embed(title=summoner, description="\n".join(elo))
-        emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
-        champs = await self.stats.top_champions_masteries(region, summoner)
-        await ctx.send(embed=emb)
-        emb = discord.Embed()
-        tmp = 0
-        emblist = []
-        for i in champs:
-            champname = await self.stats.get_champion_name(str(i["championId"]))
-            pic = await self.stats.get_champion_pic(champname)
-            print(pic)
-            mastery = i["championLevel"]
-            points = i["championPoints"]
-            coffre = i["chestGranted"]
-            cdesc = await self.stats.get_champion_desc(champname)
-            emb = discord.Embed(title=champname, description=cdesc, color=ctx.bot.color)
-            emb = discord.Embed(title=champname, description=cdesc)
-            emb.set_thumbnail(url=pic)
-            emb.add_field(name=f"Mastery {mastery}", value=f"{points} points !", inline=True)
-            if coffre:
-                emb.set_footer(text="Chest earned: Yes")
-            else:
-                emb.set_footer(text="Chest earned: No")
-            emblist.append(emb)
-            tmp += 1
-            if tmp == 10:
-                break
-            await asyncio.sleep(0.5)
-        await menu(ctx, emblist, DEFAULT_CONTROLS)
-        ##except:
-        ##    await ctx.send(_("Unknown summoner"))
+        try:
+            elo = await self.stats.get_elo(region, summoner)
+            emb = discord.Embed(title=summoner, description="\n".join(elo), color=ctx.bot.color)
+            emb = discord.Embed(title=summoner, description="\n".join(elo))
+            emb.add_field(name=_("Total mastery points: "), value=await self.stats.mastery_score(region, summoner), inline=True)
+            champs = await self.stats.top_champions_masteries(region, summoner)
+            await ctx.send(embed=emb)
+            emb = discord.Embed()
+            tmp = 0
+            emblist = []
+            for i in champs:
+                champname = await self.stats.get_champion_name(str(i["championId"]))
+                pic = await self.stats.get_champion_pic(champname)
+                print(pic)
+                mastery = i["championLevel"]
+                points = i["championPoints"]
+                coffre = i["chestGranted"]
+                cdesc = await self.stats.get_champion_desc(champname)
+                emb = discord.Embed(title=champname, description=cdesc, color=ctx.bot.color)
+                emb = discord.Embed(title=champname, description=cdesc)
+                emb.set_thumbnail(url=pic)
+                emb.add_field(name=f"Mastery {mastery}", value=f"{points} points !", inline=True)
+                if coffre:
+                    emb.set_footer(text="Chest earned: Yes")
+                else:
+                    emb.set_footer(text="Chest earned: No")
+                emblist.append(emb)
+                tmp += 1
+                if tmp == 10:
+                    break
+                await asyncio.sleep(0.5)
+            await menu(ctx, emblist, DEFAULT_CONTROLS)
+        except:
+            await ctx.send(_("Unknown summoner"))
 
     @commands.command()
     @apikeyset()
@@ -144,33 +144,36 @@ class League(commands.Cog):
     async def history(self, ctx, region, summoner, count : int = 5):
         """Shows X last game of a summoner (default: 5).
         NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
-        msg = await ctx.send(f"Loading last {count} games of {summoner} ...")
-        async with ctx.typing():
-            histo = await self.stats.get_history(count, region, summoner)
-            if not histo:
-                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
-            emb = discord.Embed(color=ctx.bot.color)
-            emblist = []
-            for i in histo:
-                cur = histo[i]
-                champ = cur["champ"]
-                horo = cur["horo"]
-                role = cur["role"]
-                duree = cur["Durée"]
-                mode = cur["Gamemode"]
-                res = cur["resultat"]
-                kda = cur["kda"]
-                stats = cur["stats"]
-                golds = cur["golds"]
-                emb.add_field(name=champ, value=mode + " : " + res, inline=True)
-                emb.add_field(name=role, value=duree, inline=False)
-                emb.add_field(name=golds, value=horo, inline=False)
-                emb.add_field(name=kda, value=stats, inline=True)
-                emblist.append(emb)
-                emb = discord.Embed()
-        await msg.edit(content="")
-        await menu(ctx=ctx, pages=emblist, controls=DEFAULT_CONTROLS, message=msg, page=1)
-        await start_adding_reactions(msg, DEFAULT_CONTROLS.keys(), self.bot.loop)
+        try:
+            msg = await ctx.send(f"Loading last {count} games of {summoner} ...")
+            async with ctx.typing():
+                histo = await self.stats.get_history(count, region, summoner)
+                if not histo:
+                    return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
+                emb = discord.Embed(color=ctx.bot.color)
+                emblist = []
+                for i in histo:
+                    cur = histo[i]
+                    champ = cur["champ"]
+                    horo = cur["horo"]
+                    role = cur["role"]
+                    duree = cur["Durée"]
+                    mode = cur["Gamemode"]
+                    res = cur["resultat"]
+                    kda = cur["kda"]
+                    stats = cur["stats"]
+                    golds = cur["golds"]
+                    emb.add_field(name=champ, value=mode + " : " + res, inline=True)
+                    emb.add_field(name=role, value=duree, inline=False)
+                    emb.add_field(name=golds, value=horo, inline=False)
+                    emb.add_field(name=kda, value=stats, inline=True)
+                    emblist.append(emb)
+                    emb = discord.Embed()
+            await msg.edit(content="")
+            await menu(ctx=ctx, pages=emblist, controls=DEFAULT_CONTROLS, message=msg, page=1)
+            await start_adding_reactions(msg, DEFAULT_CONTROLS.keys(), self.bot.loop)
+        except:
+            await ctx.send(_("This summoner isn't currently ingame or is unknown."))
 
             
         
