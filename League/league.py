@@ -145,27 +145,26 @@ class League(commands.Cog):
         """Shows X last game of a summoner (default: 5).
         NB: if your summoner name contains spaces, use "" (eg: "My summoner name")"""
         msg = await ctx.send(f"Loading last {count} games of {summoner} ...")
-        async with ctx.typing():
-            histo = await self.stats.get_history(count, region, summoner)
-            if not histo:
-                return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
-            emb = discord.Embed(title="History", color=ctx.bot.color)
-            emblist = []
-            for i in histo:
-                cur = histo[i]
-                champ = cur["champ"]
-                horo = cur["horo"]
-                role = cur["role"]
-                duree = cur["Durée"]
-                mode = cur["Gamemode"]
-                res = cur["resultat"]
-                kda = cur["kda"]
-                stats = cur["stats"]
-                golds = cur["golds"]
-                emb.add_field(name=champ, value=mode + " : " + res, inline=True)
-                emb.add_field(name=role, value=duree, inline=False)
-                emb.add_field(name=golds, value=horo, inline=False)
-                emb.add_field(name=kda, value=stats, inline=True)
-                emblist.append(emb)
-                await msg.edit(content="")
-                await menu(ctx, emblist, DEFAULT_CONTROLS)
+        histo = await self.stats.get_history(count, region, summoner)
+        if not histo:
+            return await ctx.send("Unknown region or summoner.\nList of league of legends regions:" + '\n'.join(self.stats.regions.keys))
+        emb = discord.Embed(title="History", color=ctx.bot.color)
+        emblist = []
+        for i in histo:
+            cur = histo[i]
+            champ = cur["champ"]
+            horo = cur["horo"]
+            role = cur["role"]
+            duree = cur["Durée"]
+            mode = cur["Gamemode"]
+            res = cur["resultat"]
+            kda = cur["kda"]
+            stats = cur["stats"]
+            golds = cur["golds"]
+            emb.add_field(name=champ, value=mode + " : " + res, inline=True)
+            emb.add_field(name=role, value=duree, inline=False)
+            emb.add_field(name=golds, value=horo, inline=False)
+            emb.add_field(name=kda, value=stats, inline=True)
+            emblist.append(emb)
+            await msg.edit(content="")
+            await menu(ctx, emblist, DEFAULT_CONTROLS)
