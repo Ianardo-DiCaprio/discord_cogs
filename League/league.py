@@ -167,4 +167,4 @@ class League(commands.Cog):
             emb.add_field(name=kda, value=stats, inline=True)
             emblist.append(emb)
             emb = discord.Embed()
-        await menu(ctx=ctx, pages=emblist, controls=DEFAULT_CONTROLS, message=msg, page=0)
+        await menu(ctx, emblist, DEFAULT_CONTROLS)
