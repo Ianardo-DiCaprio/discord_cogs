@@ -105,7 +105,7 @@ class League(commands.Cog):
 
     @commands.command()
     @apikeyset()
-    async def game(self, ctx, region, *, summoner):
+    async def curgame(self, ctx, region, *, summoner):
         """Show information about current game of summoner"""
         try:
             infos = await self.stats.game_info(region, summoner)
