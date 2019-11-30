@@ -14,7 +14,7 @@ class Wraith:
 
     async def _get_api_key(self):
         if not self.api:
-            db = (await self.bot.set_shared_api_tokens("apex")).get("apikey")
+            db = (await self.bot.get_shared_api_tokens("apex")).get("client_id")
             self.api = db
             return self.api
         else:
