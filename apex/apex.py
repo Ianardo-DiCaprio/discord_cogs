@@ -20,7 +20,7 @@ class Apex(commands.Cog):
     async def setapexkey(self, ctx, *, apikey):
         """Set your Apex API key for that cog to work.
         Note that it is safer to use this command in DM."""
-        await self.bot.set_shared_api_tokens(client_id=apikey)
+        await self.bot.set_shared_api_tokens("apex", client_id=apikey)
         await ctx.send("Done")
 
     @commands.command()
