@@ -25,15 +25,12 @@ class Apex(commands.Cog):
 
     @commands.command()
     async def apex(self, ctx, *, username):
-        try:
-            res = await self.api.get_infos(username)
-            ls = []
-            for i in res:
-                emb = discord.Embed(title=i['legend'] + f": {username}")
-                emb.set_thumbnail(url=i['icon_url'])
-                for j in i['stats']:
-                    emb.add_field(name=j['name'], value=j['value'], inline=False)
-                ls.append(emb)
-            await menu(ctx, ls, DEFAULT_CONTROLS)
-        except:
-            await ctx.send("We couldn't find a profile with that name :worried:")
+        res = await self.api.get_infos(username)
+        ls = []
+        for i in res:
+            emb = discord.Embed(title=i['legend'] + f": {username}")
+            emb.set_thumbnail(url=i['icon_url'])
+            for j in i['stats']:
+                emb.add_field(name=j['name'], value=j['value'], inline=False)
+            ls.append(emb)
+        await menu(ctx, ls, DEFAULT_CONTROLS)
