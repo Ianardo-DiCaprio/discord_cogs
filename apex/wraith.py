@@ -4,7 +4,7 @@ import asyncio
 class Wraith:
 
     def __init__(self, bot):
-        self.url = "https://public-api.tracker.gg/apex/v1/standard/profile/origin/"
+        self.url = "https://public-api.tracker.gg/apex/v1/standard/profile/"
         self._session = aiohttp.ClientSession()
         self.api = None
         self.bot = bot
@@ -31,8 +31,10 @@ class Wraith:
         async with self._session.get(url, headers={"TRN-Api-Key": await self.api_key()}) as response:
             return await response.json()
 
-    async def get_infos(self, username):
-        req = await self.get(self.url + username)
+    async def get_infos(self, platform, username):
+        platform = platform.replace("pc", "origin")
+        platform = platform.replace("xbox", "xbl")
+        req = await self.get(self.url + platform + username)
         res = []
         for i in req['data']['children']:
             tmp = {}
