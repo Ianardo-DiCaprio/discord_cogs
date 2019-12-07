@@ -24,7 +24,7 @@ class Apex(commands.Cog):
         await ctx.send("Done")
 
     @commands.command()
-    async def apex(self, ctx, *, username):
+    async def apex(self, ctx, platform, *, username):
         res = await self.api.get_infos(username)
         ls = []
         for i in res:
