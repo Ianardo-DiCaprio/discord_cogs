@@ -32,8 +32,8 @@ class Wraith:
             return await response.json()
 
     async def get_infos(self, platform, username):
-        platform = platform.replace("pc", "origin")
-        platform = platform.replace("xbox", "xbl")
+        platform = platform.replace("pc", "5")
+        platform = platform.replace("xbox", "2")
         req = await self.get(self.url + platform + username)
         res = []
         for i in req['data']['children']:
