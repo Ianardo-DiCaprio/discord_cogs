@@ -33,7 +33,7 @@ class Wraith:
 
     async def get_infos(self, platform, username):
         platform = platform.replace("pc", "5")
-        platform = platform.replace("xbox", "2")
+        platform = platform.replace("xbox", "xbl")
         req = await self.get(self.url + platform + "/" + username)
         res = []
         for i in req['data']['children']:
