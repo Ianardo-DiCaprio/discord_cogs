@@ -28,7 +28,7 @@ class Apex(commands.Cog):
         res = await self.api.get_infos(username)
         ls = []
         for i in res:
-            emb = discord.Embed(title=i['legend'])
+            emb = discord.Embed(title=i['legend'] + f": {username}")
             emb.set_thumbnail(url=i['icon_url'])
             for j in i['stats']:
                 emb.add_field(name=j['name'], value=j['value'], inline=False)
