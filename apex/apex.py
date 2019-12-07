@@ -25,7 +25,7 @@ class Apex(commands.Cog):
 
     @commands.command()
     async def apex(self, ctx, platform, *, username):
-        res = await self.api.get_infos(username)
+        res = await self.api.get_infos(platform, username)
         ls = []
         for i in res:
             emb = discord.Embed(title=i['legend'] + f": {username}")
