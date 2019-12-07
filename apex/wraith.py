@@ -4,7 +4,7 @@ import asyncio
 class Wraith:
 
     def __init__(self, bot):
-        self.url = "https://public-api.tracker.gg/apex/v1/standard/profile/5/"
+        self.url = "https://public-api.tracker.gg/v2/apex/standard/profile/5/"
         self._session = aiohttp.ClientSession()
         self.api = None
         self.bot = bot
